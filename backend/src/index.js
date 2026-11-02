@@ -1,17 +1,15 @@
-import dotenv from "dotenv";
 import dbconnect from "./db/dbconnect.js";
 import { app } from "./app.js";
-import dns from "dns";
 
-dotenv.config({ path: "./.env" });
-
-dns.setServers(["8.8.8.8", "8.8.4.4"]);
+const PORT = process.env.PORT || 3000;
 
 dbconnect()
-    .then(() => {
-        app.listen(process.env.PORT || 3000);
-        console.log("Successfully listening at", process.env.PORT || 3000);
-    })
-    .catch((err) => {
-        console.log("Database connection failed !!!");
+  .then(() => {
+    app.listen(PORT, () => {
+      console.log(`Server running on port ${PORT}`);
     });
+  })
+  .catch((error) => {
+    console.error("Server startup failed:", error);
+    process.exit(1);
+  });

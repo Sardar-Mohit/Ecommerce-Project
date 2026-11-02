@@ -1,1 +1,1 @@
-export let DB_NAME = "ecommerceProject"
+export const DB_NAME = "ecommerceProject"
