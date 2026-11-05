@@ -17,7 +17,7 @@ const createProductController = asyncHandler(async (req, res) => {
 })
 
 const listPublicProductsController = asyncHandler(async (req, res) => {
-    const result = await listPublicProducts(req.productQuery)
+    const result = await listPublicProducts(req.query )
 
     return res
         .status(200)

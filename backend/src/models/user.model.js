@@ -1,5 +1,6 @@
 import mongoose from "mongoose"
 import { USER_ROLES } from "../constants.js"
+import bcrypt from "bcrypt"
 
 const addressSchema = new mongoose.Schema(
     {
@@ -84,10 +85,31 @@ const userSchema = new mongoose.Schema(
         savedAddresses: {
             type: [addressSchema],
             default: []
+        },
+        refreshTokenHash: {
+            type: String,
+            select: false,
+            default: null
+        },
+
+        tokenVersion: {
+            type: Number,
+            default: 0
         }
     },
     { timestamps: true }
 )
+
+
+userSchema.pre("save", async function () {
+    if (!this.isModified("passwordHash")) return
+
+    this.passwordHash = await bcrypt.hash(this.passwordHash, 10)
+})
+
+userSchema.methods.isPasswordCorrect = function (password) {
+    return bcrypt.compare(password, this.passwordHash)
+}
 
 const User = mongoose.model("User", userSchema)
 
